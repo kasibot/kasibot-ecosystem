@@ -35,16 +35,22 @@ export function ClientDashboardPage({
     ? `${user.firstName} ${user.lastName}`
     : 'Sarah Johnson';
 
-  const handleLogout = async () => {
+  const handleLogout = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     console.log('Logout button clicked');
+    
     try {
       console.log('Calling signOut...');
-      await signOut({ redirectUrl: window.location.origin + '/sign-in' });
-      console.log('SignOut successful');
+      // Sign out and redirect
+      await signOut();
+      // Navigate after sign out
+      window.location.href = window.location.origin + '/sign-in';
     } catch (error) {
       console.error('Error signing out:', error);
-      // Fallback: try navigating manually if signOut fails
-      window.location.href = '/sign-in';
+      // Fallback: force redirect even if signOut fails
+      window.location.href = window.location.origin + '/sign-in';
     }
   };
 
@@ -476,22 +482,15 @@ export function ClientDashboardPage({
               <p className="text-[#B0B0B0] mb-4 text-sm">
                 Powered by KasiBot.io — AI Automation That Works.
               </p>
-              <motion.button
+              <button
                 type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  console.log('Logout button clicked');
-                  handleLogout();
-                }}
+                onClick={handleLogout}
                 className="inline-flex items-center gap-2 px-6 py-2 bg-[#333333] text-[#B0B0B0] rounded-xl hover:bg-[#444444] transition-colors text-sm cursor-pointer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
                 style={{ zIndex: 10, position: 'relative' }}
               >
                 <LogOut className="w-4 h-4" />
                 Log Out
-              </motion.button>
+              </button>
             </motion.div>
           </motion.div>
         </div>
