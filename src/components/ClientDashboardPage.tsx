@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Calendar, Phone, MessageCircle, Mail, FileText, CheckCircle, Clock, User, LogOut, Rocket, ChevronDown, ChevronUp, Zap, Network } from 'lucide-react';
-import { useUser } from '@clerk/clerk-react';
+import { useUser, useClerk } from '@clerk/clerk-react';
 import { useUserMetadata } from '@/lib/clerk';
+import { useNavigate } from 'react-router-dom';
 
 interface ClientDashboardPageProps {
   onViewAgreement?: () => void;
@@ -21,6 +22,8 @@ export function ClientDashboardPage({
   onViewDashboardEcosystem 
 }: ClientDashboardPageProps) {
   const { user } = useUser();
+  const { signOut } = useClerk();
+  const navigate = useNavigate();
   const metadata = useUserMetadata();
   const [showCallbackInput, setShowCallbackInput] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -31,6 +34,19 @@ export function ClientDashboardPage({
   const accountManager = user?.firstName && user?.lastName 
     ? `${user.firstName} ${user.lastName}`
     : 'Sarah Johnson';
+
+  const handleLogout = async () => {
+    console.log('Logout button clicked');
+    try {
+      console.log('Calling signOut...');
+      await signOut({ redirectUrl: window.location.origin + '/sign-in' });
+      console.log('SignOut successful');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      // Fallback: try navigating manually if signOut fails
+      window.location.href = '/sign-in';
+    }
+  };
 
   const handleRequestCallback = () => {
     if (phoneNumber) {
@@ -461,9 +477,17 @@ export function ClientDashboardPage({
                 Powered by KasiBot.io — AI Automation That Works.
               </p>
               <motion.button
-                className="inline-flex items-center gap-2 px-6 py-2 bg-[#333333] text-[#B0B0B0] rounded-xl hover:bg-[#444444] transition-colors text-sm"
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  console.log('Logout button clicked');
+                  handleLogout();
+                }}
+                className="inline-flex items-center gap-2 px-6 py-2 bg-[#333333] text-[#B0B0B0] rounded-xl hover:bg-[#444444] transition-colors text-sm cursor-pointer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                style={{ zIndex: 10, position: 'relative' }}
               >
                 <LogOut className="w-4 h-4" />
                 Log Out
