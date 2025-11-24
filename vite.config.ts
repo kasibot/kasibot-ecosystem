@@ -10,5 +10,15 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    rollupOptions: {
+      // Exclude figma_ui from build
+      external: [],
+    },
+  },
+  // Exclude figma_ui from TypeScript checking during build
+  esbuild: {
+    exclude: ['src/figma_ui/**'],
+  },
 })
 

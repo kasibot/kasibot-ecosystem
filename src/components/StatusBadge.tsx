@@ -1,5 +1,5 @@
 interface StatusBadgeProps {
-  status: 'Not Started' | 'In Progress' | 'In Review' | 'Complete' | 'Live' | 'On Hold';
+  status: 'Not Started' | 'In Progress' | 'In Review' | 'Complete' | 'Live' | 'On Hold' | 'In Queue';
 }
 
 export function StatusBadge({ status }: StatusBadgeProps) {
@@ -9,7 +9,8 @@ export function StatusBadge({ status }: StatusBadgeProps) {
     'In Review': 'bg-[#FFA500]/10 text-[#FFA500] border-[#FFA500]/30',
     'Complete': 'bg-[#00C853]/10 text-[#00C853] border-[#00C853]/30',
     'Live': 'bg-[#00C853]/10 text-[#00C853] border-[#00C853]/30',
-    'On Hold': 'bg-[#FF5252]/10 text-[#FF5252] border-[#FF5252]/30'
+    'On Hold': 'bg-[#FF5252]/10 text-[#FF5252] border-[#FF5252]/30',
+    'In Queue': 'bg-[#666666]/10 text-[#666666] border-[#666666]/30'
   };
 
   return (

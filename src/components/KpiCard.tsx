@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { LucideIcon } from 'lucide-react';
 
 interface KpiCardProps {
@@ -30,9 +29,12 @@ export default function KpiCard({
   const displayLabel = label || title;
   
   // Format trend for display
-  const trendDisplay = trend 
+  const trendDisplay = trend
     ? `${trend.isPositive ? '+' : '-'}${Math.abs(trend.value)}%`
     : undefined;
+  
+  // Type guard to ensure trend exists when used
+  const hasTrend = trend !== undefined;
 
   return (
     <div 
@@ -52,7 +54,7 @@ export default function KpiCard({
         <div className="text-[#5233FF]">
           <Icon className="w-6 h-6" />
         </div>
-        {trendDisplay && !locked && (
+        {trendDisplay && !locked && hasTrend && trend && (
           <span className={`text-xs px-2 py-1 rounded ${
             trend.isPositive 
               ? 'bg-[#00C853]/10 text-[#00C853]' 
