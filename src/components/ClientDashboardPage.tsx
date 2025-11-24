@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Calendar, Phone, MessageCircle, Mail, FileText, CheckCircle, Clock, User, LogOut, Rocket, ChevronDown, ChevronUp, Zap, Network } from 'lucide-react';
-import { useUser, useClerk } from '@clerk/clerk-react';
+import { useUser, SignOutButton } from '@clerk/clerk-react';
 import { useUserMetadata } from '@/lib/clerk';
-import { useNavigate } from 'react-router-dom';
 
 interface ClientDashboardPageProps {
   onViewAgreement?: () => void;
@@ -22,8 +21,6 @@ export function ClientDashboardPage({
   onViewDashboardEcosystem 
 }: ClientDashboardPageProps) {
   const { user } = useUser();
-  const { signOut } = useClerk();
-  const navigate = useNavigate();
   const metadata = useUserMetadata();
   const [showCallbackInput, setShowCallbackInput] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -34,30 +31,6 @@ export function ClientDashboardPage({
   const accountManager = user?.firstName && user?.lastName 
     ? `${user.firstName} ${user.lastName}`
     : 'Sarah Johnson';
-
-  const handleLogout = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    console.log('Logout button clicked');
-    
-    try {
-      console.log('Calling signOut...');
-      // Sign out - Clerk will handle the redirect automatically
-      await signOut();
-      console.log('SignOut completed');
-      
-      // Force redirect after a short delay to ensure signOut completes
-      setTimeout(() => {
-        console.log('Redirecting to sign-in...');
-        window.location.href = `${window.location.origin}/sign-in`;
-      }, 500);
-    } catch (error) {
-      console.error('Error signing out:', error);
-      // Fallback: force redirect even if signOut fails
-      window.location.href = `${window.location.origin}/sign-in`;
-    }
-  };
 
   const handleRequestCallback = () => {
     if (phoneNumber) {
@@ -487,22 +460,16 @@ export function ClientDashboardPage({
               <p className="text-[#B0B0B0] mb-4 text-sm">
                 Powered by KasiBot.io — AI Automation That Works.
               </p>
-              <button
-                type="button"
-                onClick={(e) => {
-                  console.log('Button clicked!', e);
-                  handleLogout(e);
-                }}
-                onMouseDown={(e) => {
-                  console.log('Button mousedown!', e);
-                  e.stopPropagation();
-                }}
-                className="inline-flex items-center gap-2 px-6 py-2 bg-[#333333] text-[#B0B0B0] rounded-xl hover:bg-[#444444] transition-colors text-sm cursor-pointer"
-                style={{ zIndex: 9999, position: 'relative', pointerEvents: 'auto' }}
-              >
-                <LogOut className="w-4 h-4" />
-                Log Out
-              </button>
+              <SignOutButton redirectUrl="/sign-in">
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-2 px-6 py-2 bg-[#333333] text-[#B0B0B0] rounded-xl hover:bg-[#444444] transition-colors text-sm cursor-pointer"
+                  style={{ zIndex: 9999, position: 'relative', pointerEvents: 'auto' }}
+                >
+                  <LogOut className="w-4 h-4" />
+                  Log Out
+                </button>
+              </SignOutButton>
             </motion.div>
           </motion.div>
         </div>
