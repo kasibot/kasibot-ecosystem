@@ -43,14 +43,19 @@ export function ClientDashboardPage({
     
     try {
       console.log('Calling signOut...');
-      // Sign out and redirect
+      // Sign out - Clerk will handle the redirect automatically
       await signOut();
-      // Navigate after sign out
-      window.location.href = window.location.origin + '/sign-in';
+      console.log('SignOut completed');
+      
+      // Force redirect after a short delay to ensure signOut completes
+      setTimeout(() => {
+        console.log('Redirecting to sign-in...');
+        window.location.href = `${window.location.origin}/sign-in`;
+      }, 500);
     } catch (error) {
       console.error('Error signing out:', error);
       // Fallback: force redirect even if signOut fails
-      window.location.href = window.location.origin + '/sign-in';
+      window.location.href = `${window.location.origin}/sign-in`;
     }
   };
 
@@ -484,9 +489,16 @@ export function ClientDashboardPage({
               </p>
               <button
                 type="button"
-                onClick={handleLogout}
+                onClick={(e) => {
+                  console.log('Button clicked!', e);
+                  handleLogout(e);
+                }}
+                onMouseDown={(e) => {
+                  console.log('Button mousedown!', e);
+                  e.stopPropagation();
+                }}
                 className="inline-flex items-center gap-2 px-6 py-2 bg-[#333333] text-[#B0B0B0] rounded-xl hover:bg-[#444444] transition-colors text-sm cursor-pointer"
-                style={{ zIndex: 10, position: 'relative' }}
+                style={{ zIndex: 9999, position: 'relative', pointerEvents: 'auto' }}
               >
                 <LogOut className="w-4 h-4" />
                 Log Out

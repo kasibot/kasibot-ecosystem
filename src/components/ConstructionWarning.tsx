@@ -4,12 +4,12 @@ import { motion } from 'motion/react';
 export function ConstructionWarning() {
   return (
     <motion.div
-      className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-2xl px-4"
+      className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-2xl px-4 pointer-events-none"
       initial={{ opacity: 0, y: 100 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="bg-[#222222] border border-[#5233FF] rounded-xl p-6 shadow-lg"
+      <div className="bg-[#222222] border border-[#5233FF] rounded-xl p-6 shadow-lg pointer-events-auto"
            style={{ boxShadow: '0 0 20px rgba(82, 51, 255, 0.3)' }}>
         <div className="flex items-start gap-4">
           {/* Icon */}
